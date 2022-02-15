@@ -7,12 +7,12 @@ DICT_ENG = set()
 
 def shift_by_n(word: str, shift: int, direction: int) -> str:
     """Shifting all letters in a word by n. Direction specifies encryption (>0) or decryption (<0)"""
-    # TODO: Implement this function
-    ...
+    
+    
 
 
 def encrypt(plaintext: str, shift: int, obfuscate=False) -> str:
-    """Encrypt and optionally obfuscate a string"""
+    """Encrypt and optionally obfuscate a strihow to break the password of a folderng"""
     cipher = shift_by_n(plaintext, shift, 1).upper()  # 1 for encryption
     if obfuscate:
         punctuation = ";:,.!?'() \n\t"
