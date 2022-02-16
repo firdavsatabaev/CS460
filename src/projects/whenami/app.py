@@ -32,4 +32,3 @@ for password in passwords:
 
 secret1 = "pellentesque"
 secret2 = ""
-print(finalPassword)
