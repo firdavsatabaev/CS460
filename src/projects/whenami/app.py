@@ -6,5 +6,6 @@ transformed2 = transformed1.replace(".","")
 finalPassword = transformed2.split(" ")
 
 for i in range(len(finalPassword)):
-    print(finalPassword[i])
+    tryPassword = finalPassword[i]
+    print(tryPassword)
 
