@@ -31,7 +31,7 @@ def populate_registers(init_keyword: str) -> tuple[str, str, str]:
         Z += bin(ord(char))[2:].zfill(8)
         xyz = str(X+Y+Z)
         # from other branch
-        # xyz += bin(ord(char))[2:].zfill(8)
+        xyz += bin(ord(char))[2:].zfill(8)
         
     
     if len(xyz) < 64:
