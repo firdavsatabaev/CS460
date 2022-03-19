@@ -188,6 +188,17 @@ def decrypt(
     blockLen = len(sik) - 1
     
     decrypted = ""
+
+    #  for i in range(len(blockLen)):
+    #     for b in range(len(dec_val)):
+    #         if b >= sik[i]:
+    #             decrypted = "1" + decrypted
+    #             b -= sik[i]
+    #         else:
+    #             decrypted = "0" + decrypted
+    #         i -=1
+
+
     while blockLen >= 0 and dec_val > 0:
         if dec_val >= sik[blockLen]:
             decrypted = "1" + decrypted
@@ -195,6 +206,9 @@ def decrypt(
         else:
             decrypted = "0" + decrypted
         blockLen -=1
+
+
+
     
     decrypted = int(decrypted,2)
     decrypted = chr(decrypted)
