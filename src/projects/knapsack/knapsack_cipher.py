@@ -79,8 +79,6 @@ def calculate_inverse(sik: tuple[int, ...], n: int = None, m: int = None) -> int
     :param m: M value
     :return: inverse modulo i so that m*i = 1 mod n
     """
-    # TODO: Implement this function
-      
     if n == None:
         return sum(sik)
     
@@ -184,19 +182,19 @@ def decrypt(
     :return: decrypted string
     """
     # TODO: Implement this function
-    decimal_val = ciphertext[0] * calculate_inverse(sik, n, m) % n
-    print(decimal_val)
+    dec_val = ciphertext[0] * calculate_inverse(sik, n, m) % n
+    print(dec_val)
     
-    l = len(sik) - 1
+    blockLen = len(sik) - 1
     
     decrypted = ""
-    while l >= 0 and decimal_val > 0:
-        if decimal_val >= sik[l]:
+    while blockLen >= 0 and dec_val > 0:
+        if dec_val >= sik[blockLen]:
             decrypted = "1" + decrypted
-            decimal_val -= sik[l]
+            dec_val -= sik[blockLen]
         else:
             decrypted = "0" + decrypted
-        l -=1
+        blockLen -=1
     
     decrypted = int(decrypted,2)
     decrypted = chr(decrypted)
