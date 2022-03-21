@@ -81,8 +81,6 @@ def calculate_inverse(sik: tuple[int, ...], n: int = None, m: int = None) -> int
     :param m: M value
     :return: inverse modulo i so that m*i = 1 mod n
     """
-    if n == None:
-        return sum(sik)
     
     n0 = n 
     y = 0
@@ -90,19 +88,23 @@ def calculate_inverse(sik: tuple[int, ...], n: int = None, m: int = None) -> int
   
     if (n == 1) : 
         return 0
+    
+
+    if n == None:
+        return sum(sik)
   
     while (m > 1) : 
   
-        q = m // n 
+        qModular = m // n 
   
-        t = n
+        SmallestNumber = n
   
         n = m % n 
-        m = t 
-        t = y 
+        m =  SmallestNumber
+        SmallestNumber = y 
   
-        y = x - q * y 
-        x = t 
+        y = x - qModular * y 
+        x = SmallestNumber
   
   
     # Turn the x value into positive in case it is negative
@@ -124,8 +126,9 @@ def generate_gk(sik: tuple[int, ...], n: int = None, m: int = None) -> tuple[int
     # TODO: Implement this function
     if n == None:
         n = calculate_n(sik)
-        m = calculate_m( n)
-    x = tuple(sik[i]*m%n for i in range(len(sik)))
+        m = calculate_m(n)
+    lenOfKnap = len(sik)
+    x = tuple(sik[i]*m%n for i in range(lenOfKnap))
     return x
 
 
@@ -141,12 +144,11 @@ def encrypt(
     :return: encrypted text
     """
     # TODO: Implement this function
-    plaintextEncrypt = len(plaintext)
+    plaintextEncrypt = len(plaintext) 
     
     binary_val = ""
     
     for i in range(plaintextEncrypt):
-        print(plaintext[i])
         binary_val += format(ord(plaintext[i]), 'b').zfill(8)
     
     
@@ -191,14 +193,14 @@ def decrypt(
     
     decrypted = ""
 
-    #  for i in range(len(blockLen)):
+    # for i in range(len(blockLen)):
     #     for b in range(len(dec_val)):
     #         if b >= sik[i]:
     #             decrypted = "1" + decrypted
     #             b -= sik[i]
-    #         else:
-    #             decrypted = "0" + decrypted
-    #         i -=1
+            # else:
+            #     decrypted = "0" + decrypted
+            # i -=1
 
 
     while blockLen >= 0 and dec_val > 0:
