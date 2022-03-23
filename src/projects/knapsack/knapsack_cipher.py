@@ -54,6 +54,7 @@ def calculate_n(sik: tuple) -> int:
     sum = 0
     # while sum <= len(sik):
     #     sum = sum + sik[sum]
+    
     for i in sik:
         sum += i
     n = sum + 1
