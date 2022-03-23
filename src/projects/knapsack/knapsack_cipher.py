@@ -60,11 +60,11 @@ def calculate_n(sik: tuple) -> int:
     n = sum + 1
     return n
 
-def gcd(a ,b):
+def GComDen(a ,b):
     if a == 0:
         return b
     else:
-        return gcd(b % a, a)
+        return GComDen(b % a, a)
 
 def calculate_m(n: int) -> int:
     """
@@ -75,7 +75,7 @@ def calculate_m(n: int) -> int:
     """
     # TODO: Implement this function
     for i in range(n-1, 0, -1):
-        if gcd(i, n) == 1:
+        if GComDen(i, n) == 1:
             return i
         
 
