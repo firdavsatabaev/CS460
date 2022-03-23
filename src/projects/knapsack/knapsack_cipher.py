@@ -25,6 +25,13 @@ def generate_sik(size: int = BLOCK_SIZE) -> tuple[int, ...]:
     # TODO: Implement this function
     knapsackList = []
     sum = 0
+
+    # while sum < len(size):
+
+    #     val = random.randrange(sum+1, sum+10)
+    #     knapsackList.append(val)
+    #     sum += val
+
     for i in range(size):
         val = random.randrange(sum+1, sum+10)
         knapsackList.append(val)
