@@ -4,6 +4,7 @@ The process of data extraction:
 Unziped the secret.zip file using a website: https://www.ezyzip.com/unzip-files-online.html
 Stored the extracted image as a secret.png
 In order to extract a metadata, I used Jeffrey's Image Metadata Viewer: http://exif.regex.info/exif.cgi
+I used GPS Coordinator Look Up to find the position and more information: https://www.gps-coordinates.net/ 
 
 
 The answers:
