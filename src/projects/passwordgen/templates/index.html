@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Generator</title>
+    <link href="//cdn.muicss.com/mui-0.10.1/css/mui.min.css" rel="stylesheet" type="text/css" />
+    <script src="//cdn.muicss.com/mui-0.10.1/js/mui.min.js"></script>
+    <script src="script.js"></script>
+</head>
+
+<body>
+    <div class="mui-container mui--text-center">
+        <h1>Lets Crack some jokes ehh!!</h1>
+    </div>
+    <div class="mui-container mui--text-center" id="buttons">
+        <form action = "{{ url_for('index') }}" method="POST">
+            <div style="position:absolute; left: 350px; top:300px; margin: auto;  padding: 10px; width:50%;" >
+                <table id="checkin" style="width:100%"> 
+            
+                        <tr >
+                            <th>Number of Passwords</th>
+                            <th>Length</th>
+                            <!-- <th>Word Separator</th> -->
+                            <th> Characters</th>
+                            
+                        </tr>
+                    
+                <tr >
+                    <td> 
+                        <select name="lenghPass" id="selwork">
+                            <!-- TODO: Populate categories -->
+                            <option value="n1" >1</option>
+                            <option value="n2">2</option>
+                            <option value="n3">3</option>
+                            <option value="n4">4</option>
+                            <option value="n5" >5</option>
+                            <option value="n6">6</option>
+                            <option value="n7">7</option>
+                            <option value="n8">8</option>
+                            <option value="n9" >9</option>
+                            <option value="n10">10</option>
+                            <option value="n11">11</option>
+                            <option value="n12">12</option>
+                            <option value="n13" >13</option>
+                            <option value="n14">14</option>
+                            <option value="n15">15</option>
+                            <option value="n16">16</option>
+                            <option value="n17" >17</option>
+                            <option value="n18">18</option>
+                            <option value="n19">19</option>
+                            <option value="n20">20</option>
+                            
+                
+                        </select></td>
+
+
+                    <td><select name="Type" id="seltype">
+                        <!-- TODO: Populate categories -->
+                        <option value="one">6</option>
+                        <option value="twelve">12</option>
+                        <option value="eighteen">18</option>
+                        <option value="tfour">24</option>
+                        <option value="thirty">30</option>
+            
+                    </select></td>
+
+                  
+                     
+                    <td><select name="Instructor" id="selInst">
+                        <!-- TODO: Populate categories -->
+                        <option value="Yes">Digits</option>
+                        <option value="No">Lowercase letters</option>
+                        <option value="Yes">Uppercase letters</option>
+                        <option value="No">Lowercase and uppercase</option>
+                        <option value="Yes">Digits and letters</option>
+                        <option value="No">Special characters</option>
+                        <option value="No">JungleJuice</option>
+                        
+            
+                    </select></td>
+                </tr>
+                </table>
+        </div>
+
+            <button class="mui-btn mui-btn-large mui-btn--primary" type="button" name="name" value="name"
+                onclick="requestData('jokes')">Get a Joke</button>
+          
+        </form>
+
+    </div>
+    <div class="mui-container mui--text-center">
+        <div class="mui-panel mui--text-center" id="response"></div>
+    </div>
+</body>
+
+</html>
