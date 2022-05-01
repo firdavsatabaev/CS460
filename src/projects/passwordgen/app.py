@@ -37,7 +37,20 @@ def digitsFunc(typeOfPass, numberPass, number):
     letter_and_digits = upperAndlower + digits
     special_characters = ['~', ':', "'", '+', '[', '\\', '@', '^', '{', '%', '(', '-', '"', '*', '|', ',', '&', '<', '`', '}', '.', '_', '=', ']', '!', '>', ';', '?', '#', '$', ')', '/']
     jungleJuice = letter_and_digits + special_characters
-    passPhrase = open("words.txt", "r")
+    f = open("words.txt", "r")
+    templist = []
+      
+    for line in f:
+       templist.append(line)
+    temppList = []
+    for ch in templist:
+       tem = ''
+       for x in ch:
+          if x.isalpha():
+             tem += x
+       temppList.append(tem)
+    print(temppList)
+
     numberofPasswords = []
 
     
@@ -218,18 +231,18 @@ def digitsFunc(typeOfPass, numberPass, number):
        
 
      
-      # cal = int(math.log((len(passPhrase)**number), 2))
+      cal = int(math.log((len(temppList)**number), 2))
 
-      # if cal < 40:
-      #    status = "Avoid"
-      # elif cal > 40 and cal < 60:
-      #    status = "Very Weak"
-      # elif cal > 60 and cal < 80:
-      #    status = "Weak"
-      # elif cal > 80 and cal < 100:
-      #    status = "Strong"
-      # elif cal > 100:
-      #    status = "Very Strong"
+      if cal < 40:
+         status = "Avoid"
+      elif cal > 40 and cal < 60:
+         status = "Very Weak"
+      elif cal > 60 and cal < 80:
+         status = "Weak"
+      elif cal > 80 and cal < 100:
+         status = "Strong"
+      elif cal > 100:
+         status = "Very Strong"
       
       # choice.append(status)
 
@@ -238,10 +251,9 @@ def digitsFunc(typeOfPass, numberPass, number):
       for i in range(numberPass):
 
 
-         temp = random.sample(digits*100,int(number))
-      
-         password = "".join(temp)
-         numberofPasswords.append(password)
+         # temp = random.sample(len(temppList)*100,int(number))
+         randomName = random.choice(temppList)   
+         numberofPasswords.append(randomName)
 
         
 
