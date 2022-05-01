@@ -37,7 +37,7 @@ def digitsFunc(typeOfPass, numberPass, number):
     letter_and_digits = upperAndlower + digits
     special_characters = ['~', ':', "'", '+', '[', '\\', '@', '^', '{', '%', '(', '-', '"', '*', '|', ',', '&', '<', '`', '}', '.', '_', '=', ']', '!', '>', ';', '?', '#', '$', ')', '/']
     jungleJuice = letter_and_digits + special_characters
-    f = open("words.txt", "r")
+    f = open("/home/firdavs/Desktop/CS460/src/projects/passwordgen/words.txt", "r")
     templist = []
       
     for line in f:
@@ -49,7 +49,6 @@ def digitsFunc(typeOfPass, numberPass, number):
           if x.isalpha():
              tem += x
        temppList.append(tem)
-    print(temppList)
 
     numberofPasswords = []
 
@@ -245,15 +244,29 @@ def digitsFunc(typeOfPass, numberPass, number):
          status = "Very Strong"
       
       # choice.append(status)
+      chars = ["@", "#", "$", "*", "&"]
 
+      sel = random.choice(chars)
       
+      nums = []
 
-      for i in range(numberPass):
+      for i in range(number):
+         x = random.choice(temppList)
+         nums.append(x)
 
-
-         # temp = random.sample(len(temppList)*100,int(number))
-         randomName = random.choice(temppList)   
-         numberofPasswords.append(randomName)
+      for n in range(number):
+         temp = []
+         for i in range(numberPass):
+            
+            # temp = random.sample(len(temppList),int(number))
+            randomName = random.choice(temppList)
+            # rand2 = random.choice(nums)
+            
+            connect1 = randomName + sel 
+            xy = "".join(connect1)
+         
+            temp.append(xy)
+         numberofPasswords.append(temp)
 
         
 
