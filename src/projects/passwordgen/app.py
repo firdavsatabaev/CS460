@@ -266,7 +266,9 @@ def digitsFunc(typeOfPass, numberPass, number):
             xy = "".join(connect1)
          
             temp.append(xy)
-         numberofPasswords.append(temp)
+         xyz = ' '.join([str(item) for item in temp])
+
+         numberofPasswords.append([xyz])
 
         
 
