@@ -1,0 +1,3 @@
+lannce07:$1$BVW5rNMy$SRnR1FRsOWRKmfxloZQoo1:1016:1016:,,,:/home/lannce07:/bin/bash
+barare51:$1$LG8v95CB$D6aceBHCNNUUV9SosCXN9/:1017:1017:,,,:/home/barare51:/bin/bash
+
