@@ -1,8 +1,15 @@
 #!/usr/bin/env python3
-# encoding: UTF-8
+"""
+Custom VPN. Client
+
+@authors: 
+@version: 2022.4
+"""
+from Crypto.Cipher import AES, DES, Blowfish
+from ast import Tuple
+from hashlib import sha256
 
 from socket import socket, gethostname, AF_INET, SOCK_STREAM
-from typing import Tuple, Dict
 
 HOST = gethostname()
 PORT = 4600
@@ -10,20 +17,28 @@ PORT = 4600
 
 def generate_cipher_proposal(supported: dict) -> str:
     """Generate a cipher proposal message
-    
+
     :param supported: cryptosystems supported by the client
     :return: proposal as a string
     """
-    raise NotImplementedError
-
-
-def parse_cipher_selection(msg: str) -> Tuple[str, int]:
-    """Parse server's response
+    ...
+    proposed_ciphers = "ProposedCiphers:"
+    for key in supported:
+        proposed_ciphers += key + ":" + str(supported[key]) + ","
     
+    proposed_ciphers = proposed_ciphers[:-1]
+
+    return proposed_ciphers
+
+def parse_cipher_selection(msg: str) -> tuple[str, int]:
+    """Parse server's response
+
     :param msg: server's message with the selected cryptosystem
     :return: (cipher_name, key_size) tuple extracted from the message
     """
-    raise NotImplementedError
+    ...
+    lst = msg.split(":")
+    return (lst[1], lst[2])
 
 
 def generate_dhm_request(public_key: int) -> str:
@@ -32,21 +47,23 @@ def generate_dhm_request(public_key: int) -> str:
     :param: client's DHM public key
     :return: string according to the specification
     """
-    raise NotImplementedError
+    ...
+    return "DHMKE:" + str(public_key)
+
 
 
 def parse_dhm_response(msg: str) -> int:
     """Parse server's DHM key exchange request
-    
+
     :param msg: server's DHMKE message
     :return: number in the server's message
     """
-    raise NotImplementedError
+    ...
+    result = msg.split(":")
+    return int(result[1])
 
 
-def get_key_and_iv(
-    shared_key: str, cipher_name: str, key_size: int
-) -> Tuple[object, bytes, bytes]:
+def get_key_and_iv(shared_key, cipher_name, key_size):
     """Get key and IV from the generated shared secret key
 
     :param shared_key: shared key as computed by `diffiehellman`
@@ -60,19 +77,42 @@ def get_key_and_iv(
     `iv` is the *last* `ivlen` bytes of the shared key
     Both key and IV must be returned as bytes
     """
-    raise NotImplementedError
+    ...
+    byte_shared_key = bytes(shared_key, 'utf-8')
+    
+    # key
+    key = byte_shared_key[:key_size]
+
+    # IV 
+    if cipher_name == "AES":
+        ivlen = AES.block_size
+    elif cipher_name == "DES":
+        ivlen = DES.block_size
+    else:
+        ivlen = Blowfish.block_size
+    IV = byte_shared_key[-ivlen:]
+
+    if cipher_name == "AES":
+        obj = AES.new(key, AES.MODE_CBC, IV)
+    elif cipher_name == "DES":
+        obj = AES.new(key, DES.MODE_CBC, IV)
+    else:
+        obj = AES.new(key, Blowfish.MODE_CBC, IV)
+    
+    return (obj, key, IV)
+
 
 
 def add_padding(message: str) -> str:
     """Add padding (0x0) to the message to make its length a multiple of 16
-    
+
     :param message: message to pad
     :return: padded message
     """
-    raise NotImplementedError
+    ...
 
 
-def encrypt_message(message: str, crypto: object, hashing: object) -> Tuple[bytes, str]:
+def encrypt_message(message: str, crypto: object, hashing: object) -> tuple[bytes, str]:
     """
     Encrypt the message
 
@@ -85,7 +125,7 @@ def encrypt_message(message: str, crypto: object, hashing: object) -> Tuple[byte
     2. Encrypt using cipher `crypto`
     3. Compute HMAC using `hashing`
     """
-    raise NotImplementedError
+    ...
 
 
 def main():
