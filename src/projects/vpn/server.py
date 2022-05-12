@@ -26,20 +26,20 @@ def parse_proposal(msg: str) -> dict[str, list]:
     ...
     current_cipher = ""
     ciphers = msg[16:]
-    next = False
-    count = 0
+    nextVal = False
+    counter = 0
 
     for i in range(len(ciphers)):
-        if next == True:
-            next = False
-            if count == 1:
+        if nextVal == True:
+            nextVal = False
+            if counter == 1:
                 current_cipher = ciphers[:i] + ";" + ciphers[i+1:]
             else:
                 current_cipher = current_cipher[:i] + ";" + current_cipher[i+1:] 
         else:
             if ciphers[i] == "]":
-                next = True
-                count += 1
+                nextVal = True
+                counter += 1
  
     result = current_cipher.split(";")
 
@@ -53,11 +53,11 @@ def parse_proposal(msg: str) -> dict[str, list]:
             result[m][1][n] = int(result[m][1][n].strip())
     print("RESULT", result)
 
-    dictionary = {}
+    cipherAndkey = {}
     for i in range(len(result)):
-        dictionary[result[i][0]] = result[i][1] 
-    print(dictionary)
-    return dictionary
+        cipherAndkey[result[i][0]] = result[i][1] 
+    
+    return cipherAndkey
 
 
 def select_cipher(supported: dict, proposed: dict) -> tuple[str, int]:
@@ -70,19 +70,26 @@ def select_cipher(supported: dict, proposed: dict) -> tuple[str, int]:
     """
     # TODO: Implement this function
     ...
-    longest_key_size = 0
-    result = ("None",0)
-    for key in proposed:
-        if key in supported:
-            keysize_server = supported[key]
-            keysize_client = proposed[key]
-            for keysize in keysize_server:
-                if keysize in keysize_client and keysize > longest_key_size:
-                    result = (key, keysize)
+  
+    commonCiphers = set(supported.keys()).intersection(proposed.keys())
 
-    if result == ("None", 0):
-        raise ValueError('there is no (cipher, key_size) combination that both client and server support')
-    return result
+    cipher = None
+    key_size = -1
+
+    if commonCiphers != set():
+        for c in commonCiphers:
+            currentKeysize = max(
+                # -1 will be the max value if the intersection is empty
+                set([-1]).union(set(supported.get(c)).intersection(proposed.get(c))))
+            if currentKeysize > key_size:
+                key_size = currentKeysize
+                cipher = c
+
+    if not cipher or key_size == -1:
+        raise ValueError(
+            'Could not agree on a cipher')
+
+    return (cipher, key_size)
                 
 
 
@@ -95,7 +102,8 @@ def generate_cipher_response(cipher: str, key_size: int) -> str:
     """
     # TODO: Implement this function
     ...
-    return "ChosenCipher:" + cipher + ":" + str(key_size)
+    # return "ChosenCipher:" + cipher + ":" + str(key_size)
+    return "ChosenCipher:{},{}".format(cipher, key_size)
 
 
 def parse_dhm_request(msg: str) -> int:
@@ -130,28 +138,19 @@ def get_key_and_iv(
     """
     # TODO: Implement this function
     ...
-    byte_shared_key = bytes(shared_key, 'utf-8')
-    
-    # key
-    key = byte_shared_key[:key_size]
+ 
+    cipherMap = {"DES": DES, "AES": AES, "Blowfish": Blowfish}
 
-    # IV 
-    if cipher_name == "AES":
-        ivlen = AES.block_size
-    elif cipher_name == "DES":
-        ivlen = DES.block_size
-    else:
-        ivlen = Blowfish.block_size
-    IV = byte_shared_key[-ivlen:]
+    ivlen = {"DES": 8, "AES": 16, "Blowfish": 8}
 
-    if cipher_name == "AES":
-        obj = AES.new(key, AES.MODE_CBC, IV)
-    elif cipher_name == "DES":
-        obj = AES.new(key, DES.MODE_CBC, IV)
-    else:
-        obj = AES.new(key, Blowfish.MODE_CBC, IV)
-    
-    return (obj, key, IV)
+    cipher = cipherMap.get(cipher_name)
+    key = shared_key[:key_size//8]
+    if cipher_name == "DES":
+        key += '\0'
+    key = key.encode()
+    iv = shared_key[-1 * ivlen.get(cipher_name):].encode()
+
+    return cipher, key, iv
 
 
 def generate_dhm_response(public_key: int) -> str:
@@ -174,6 +173,11 @@ def read_message(msg_cipher: bytes, crypto: object) -> tuple[str, str]:
     """
     # TODO: Implement this function
     ...
+    ciph_in = msg_cipher[:-64]
+    hmac = msg_cipher[-64:].decode('utf-8')
+    plaintext = crypto.decrypt(ciph_in).decode('utf-8')
+    plaintext = plaintext.strip('\0')
+    return plaintext, hmac
 
 
 def validate_hmac(msg_cipher: bytes, hmac_in: str, hashing: object) -> bool:
@@ -186,6 +190,14 @@ def validate_hmac(msg_cipher: bytes, hmac_in: str, hashing: object) -> bool:
     """
     # TODO: Implement this function
     ...
+    ciphertext = msg_cipher[:-64]
+    hashing.update(ciphertext)
+    hashvalue = hashing.hexdigest()
+
+    if hashvalue == hmac_in:
+        return True
+    else:
+        raise ValueError('Bad HMAC')
 
 
 def main():
