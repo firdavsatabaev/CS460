@@ -124,7 +124,7 @@ def encrypt_message(message: str, crypto: object, hashing: object) -> tuple[byte
     3. Compute HMAC using `hashing`
     """
     ...
-    message = add_padding(message)
+    message = add_padding(message.encode('utf-8'))
     ciphertext = crypto.encrypt(message)
     hashing.update(ciphertext)
     hmcVal = hashing.hexdigest()
