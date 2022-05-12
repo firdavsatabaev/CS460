@@ -79,7 +79,6 @@ def select_cipher(supported: dict, proposed: dict) -> tuple[str, int]:
     if commonCiphers != set():
         for c in commonCiphers:
             currentKeysize = max(
-                # -1 will be the max value if the intersection is empty
                 set([-1]).union(set(supported.get(c)).intersection(proposed.get(c))))
             if currentKeysize > key_size:
                 key_size = currentKeysize
