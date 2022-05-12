@@ -21,14 +21,12 @@ def generate_cipher_proposal(supported: dict) -> str:
     :param supported: cryptosystems supported by the client
     :return: proposal as a string
     """
-    ...
-    proposed_ciphers = "ProposedCiphers:"
-    for key in supported:
-        proposed_ciphers += key + ":" + str(supported[key]) + ","
     
-    proposed_ciphers = proposed_ciphers[:-1]
+    proposedCipher = "ProposedCiphers:"
+    proposedCipher = proposedCipher + ','.join([cipher + ':[' + ','.join([str(x) for x in bits]) + ']'
+                     for cipher, bits in supported.items()])
 
-    return proposed_ciphers
+    return proposedCipher
 
 def parse_cipher_selection(msg: str) -> tuple[str, int]:
     """Parse server's response
@@ -37,8 +35,11 @@ def parse_cipher_selection(msg: str) -> tuple[str, int]:
     :return: (cipher_name, key_size) tuple extracted from the message
     """
     ...
-    lst = msg.split(":")
-    return (lst[1], lst[2])
+    listOfMSG = msg.split(':')[1].split(',')
+    cipher_name = listOfMSG[0]
+    key_size = int(listOfMSG[1])
+
+    return cipher_name, key_size
 
 
 def generate_dhm_request(public_key: int) -> str:
@@ -61,6 +62,7 @@ def parse_dhm_response(msg: str) -> int:
     ...
     result = msg.split(":")
     return int(result[1])
+    
 
 
 def get_key_and_iv(shared_key, cipher_name, key_size):
@@ -78,28 +80,18 @@ def get_key_and_iv(shared_key, cipher_name, key_size):
     Both key and IV must be returned as bytes
     """
     ...
-    byte_shared_key = bytes(shared_key, 'utf-8')
-    
-    # key
-    key = byte_shared_key[:key_size]
+    cipher_map = {"DES": DES, "AES": AES, "Blowfish": Blowfish}
 
-    # IV 
-    if cipher_name == "AES":
-        ivlen = AES.block_size
-    elif cipher_name == "DES":
-        ivlen = DES.block_size
-    else:
-        ivlen = Blowfish.block_size
-    IV = byte_shared_key[-ivlen:]
+    ivlen = {"DES": 8, "AES": 16, "Blowfish": 8}
 
-    if cipher_name == "AES":
-        obj = AES.new(key, AES.MODE_CBC, IV)
-    elif cipher_name == "DES":
-        obj = AES.new(key, DES.MODE_CBC, IV)
-    else:
-        obj = AES.new(key, Blowfish.MODE_CBC, IV)
-    
-    return (obj, key, IV)
+    selectedCipher = cipher_map.get(cipher_name)
+    key = shared_key[:key_size//8]
+    if cipher_name == "DES":
+        key += '\0'
+    key = key.encode()
+    iv = shared_key[-1 * ivlen.get(cipher_name):].encode()
+
+    return selectedCipher, key, iv
 
 
 
@@ -110,6 +102,12 @@ def add_padding(message: str) -> str:
     :return: padded message
     """
     ...
+    padding = len(message)
+    while padding % 16 != 0:
+        padding += 1
+    padding -= len(message)
+    paddedMessage = message + '\0' * padding
+    return paddedMessage
 
 
 def encrypt_message(message: str, crypto: object, hashing: object) -> tuple[bytes, str]:
@@ -126,6 +124,11 @@ def encrypt_message(message: str, crypto: object, hashing: object) -> tuple[byte
     3. Compute HMAC using `hashing`
     """
     ...
+    message = add_padding(message)
+    ciphertext = crypto.encrypt(message)
+    hashing.update(ciphertext)
+    hmcVal = hashing.hexdigest()
+    return ciphertext, hmcVal
 
 
 def main():
